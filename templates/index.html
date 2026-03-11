@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caminho Saúde Natural</title>
+    <style>
+        /* Paleta de Cores Naturologia */
+        :root {
+            --verde-escuro: #1b5e20;
+            --verde-principal: #2e7d32;
+            --verde-claro: #a5d6a7;
+            --fundo-suave: #e8f5e9;
+            --branco: #ffffff;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--fundo-suave); 
+            text-align: center; 
+            padding: 20px; 
+            color: #333; 
+            margin: 0;
+        }
+
+        .container { 
+            max-width: 900px; 
+            margin: 20px auto; 
+            background: var(--branco); 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-top: 10px solid var(--verde-escuro);
+        }
+
+        h1 { color: var(--verde-escuro); margin-bottom: 5px; font-size: 2.5em; }
+        .subtitle { color: var(--verde-principal); font-weight: bold; margin-bottom: 30px; }
+
+        /* Estilo da Busca */
+        .search-box { 
+            margin-bottom: 30px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 12px; 
+            background: #f1f8e9;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        input { 
+            padding: 12px 15px; 
+            width: 60%; 
+            border: 2px solid var(--verde-claro); 
+            border-radius: 8px; 
+            font-size: 16px; 
+            outline: none; 
+            transition: all 0.3s; 
+        }
+
+        input:focus { border-color: var(--verde-principal); box-shadow: 0 0 8px rgba(46, 125, 50, 0.3); }
+
+        /* Botões */
+        button { 
+            padding: 12px 25px; 
+            background-color: var(--verde-principal); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 16px; 
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        button:hover { background-color: var(--verde-escuro); transform: scale(1.05); }
+
+        .btn-limpar { 
+            padding: 12px 25px; 
+            background-color: #78909c; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            font-size: 16px; 
+            display: inline-block; 
+            transition: background 0.3s;
+        }
+
+        .btn-limpar:hover { background-color: #546e7a; }
+
+        .counter { margin: 15px 0; color: var(--verde-principal); font-weight: 500; }
+
+        /* Cards das Plantas */
+        .card { 
+            display: flex; 
+            align-items: flex-start; 
+            background: var(--branco); 
+            border-radius: 15px; 
+            margin-bottom: 25px; 
+            padding: 20px; 
+            text-align: left; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 8px solid var(--verde-claro);
+            transition: all 0.3s;
+        }
+
+        .card:hover { border-left-color: var(--verde-escuro); transform: translateX(10px); background-color: #fafffa; }
+
+        /* Container da Foto */
+        .photo-container {
+            width: 140px;
+            height: 140px;
+            background-color: #e8f5e9; 
+            border-radius: 12px;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid #c8e6c9;
+        }
+
+        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .card-content { flex: 1; }
+        .card-content h2 { margin-top: 0; color: var(--verde-escuro); font-size: 1.5em; }
+        .card-content h4 { margin: 5px 0 10px 0; color: #558b2f; font-style: italic; }
+        .card-content p { line-height: 1.6; color: #444; font-size: 15px; }
+        
+        hr { border: 0; border-top: 2px solid var(--verde-claro); margin: 30px 0; opacity: 0.3; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🌿 Caminho Saúde Natural</h1>
+        <p class="subtitle">Base de Dados de Naturologia - Darlan de Quadros</p>
+
+        <form method="POST" class="search-box">
+            <input type="text" name="termo" value="{{ termo }}" placeholder="Pesquise sintoma ou planta (ex: inflam, digest)">
+            <button type="submit">Consultar</button>
+            <a href="/" class="btn-limpar">Limpar</a>
+        </form>
+
+        {% if plantas %}
+            <p class="counter">🍃 Foram encontradas <strong>{{ plantas|length }}</strong> plantas medicinais.</p>
+            
+            {% for planta in plantas %}
+                <div class="card">
+                    <div class="photo-container">
+                        <img src="{{ url_for('static', filename='fotos/' + planta[1].replace(' ', '_') + '.jpg') }}" 
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/150/e8f5e9/2e7d32?text=Sem+Foto'" 
+                             alt="{{ planta[0] }}">
+                    </div>
+                    
+                    <div class="card-content">
+                        <h2>{{ planta[0] }}</h2>
+                        <h4>{{ planta[1] }}</h4>
+                        <p>{{ planta[2] }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% elif termo %}
+            <p style="color: #c62828;">Nenhuma planta encontrada para o termo "<strong>{{ termo }}</strong>".</p>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
+
+
+
